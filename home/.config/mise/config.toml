@@ -1,0 +1,9 @@
+[tools]
+python = "3.14"
+node = "24"
+delta = "latest"
+just = "latest"
+xh = "latest"
+bottom = "latest"
+dust = "latest"
+

@@ -1,0 +1,64 @@
+add_newline = false
+scan_timeout = 200
+palette = "onur_accessible"
+
+format = "$hostname$directory$git_branch$git_status$python$character"
+right_format = "$cmd_duration$time"
+
+[character]
+success_symbol = "[❯](bold char_ok)"
+error_symbol = "[❯](bold char_err)"
+
+[hostname]
+ssh_only = true
+format = "[$hostname]($style) "
+style = "bold host"
+
+[directory]
+style = "bold directory"
+truncation_length = 3
+truncate_to_repo = true
+format = "[$path]($style) "
+
+[git_branch]
+symbol = " "
+style = "bold branch"
+ignore_branches = ["main", "master"]
+format = "[$symbol$branch]($style) "
+
+[git_status]
+style = "bold status"
+format = "([$all_status$ahead_behind]($style) )"
+modified = "*"
+staged = "+"
+untracked = "?"
+ahead = "⇡"
+behind = "⇣"
+diverged = "⇕"
+
+[python]
+symbol = " "
+format = "[$symbol]($style)"
+style = "bold python"
+
+[cmd_duration]
+min_time = 1000
+format = "took [$duration]($style) "
+style = "duration"
+
+[time]
+disabled = false
+time_format = "%H:%M"
+format = "[$time]($style)"
+style = "time"
+
+[palettes.onur_accessible]
+char_ok = "#56B6C2"
+char_err = "#FF7AB2"
+host = "#5EA1FF"
+directory = "#7AD7FF"
+branch = "#C792EA"
+status = "#FFB454"
+python = "#73DACA"
+duration = "#EBCB8B"
+time = "#A7B1C2"

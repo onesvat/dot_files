@@ -1,0 +1,18 @@
+# see https://github.com/sigoden/aichat/blob/main/config.example.yaml
+
+#model: htpc:ministral-3-3b-instruct-2512
+model: lms:zai-org/glm-4.7-flash
+clients:
+- type: openai-compatible
+  name: lms
+  api_base: http://localhost:1234/v1
+  models:
+  - name: qwen/qwen3-coder-30b
+  - name: ministral-3-14b-reasoning-2512
+  - name: ministral-3-14b-instruct-2512
+  - name: zai-org/glm-4.7-flash
+- type: openai-compatible
+  name: htpc
+  api_base: http://192.168.1.20:1234/v1
+  models:
+  - name: ministral-3-3b-instruct-2512

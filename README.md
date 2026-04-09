@@ -18,7 +18,8 @@ Shared shell dotfiles for desktop and `htpc`.
 - `atuin/config.toml` — history search settings
 - `glow/glow.yml` — markdown viewer settings
 - `.gitconfig` — git identity, delta pager, merge settings
-- `aichat/config.yaml.example` — template for local LLM client config
+- `aichat/config.yaml` — shared local LLM client config
+- `aichat/roles/cmd.md` — shell-command role used by `q`
 - `firecrawl.env.example` — template for Firecrawl API config
 
 ## Deploy from scratch

@@ -1,7 +1,7 @@
 # see https://github.com/sigoden/aichat/blob/main/config.example.yaml
 
-#model: htpc:ministral-3-3b-instruct-2512
-model: lms:zai-org/glm-4.7-flash
+model: htpc:gemma-4
+#model: lms:zai-org/glm-4.7-flash
 clients:
 - type: openai-compatible
   name: lms
@@ -16,3 +16,4 @@ clients:
   api_base: http://192.168.1.20:1234/v1
   models:
   - name: ministral-3-3b-instruct-2512
+  - name: gemma-4

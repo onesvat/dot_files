@@ -799,26 +799,36 @@ cat sales.csv  # Opens csvlens if it's CSV
 - Connects to multiple LLM backends
 - Local LM Studio integration configured
 - Chat REPL mode or one-shot queries
-- Role-based prompts (e.g., `cmd` role for commands)
+- Role-based prompts (repo-managed `cmd` role for commands)
 - Session management
 - Custom model configurations
 
 **Configuration** (`~/.config/aichat/config.yaml`):
 ```yaml
-model: lms:zai-org/glm-4.7-flash
+# see https://github.com/sigoden/aichat/blob/main/config.example.yaml
+
+model: htpc:gemma-4
+#model: lms:zai-org/glm-4.7-flash
 clients:
   - type: openai-compatible
     name: lms              # Local LM Studio
     api_base: http://localhost:1234/v1
     models:
-      - zai-org/glm-4.7-flash
       - qwen/qwen3-coder-30b
       - ministral-3-14b-reasoning-2512
+      - ministral-3-14b-instruct-2512
+      - zai-org/glm-4.7-flash
   - type: openai-compatible
     name: htpc             # Remote LM Studio on HTPC
     api_base: http://192.168.1.20:1234/v1
     models:
       - ministral-3-3b-instruct-2512
+      - gemma-4
+```
+
+**Custom role** (`~/.config/aichat/roles/cmd.md`):
+```text
+You are a Linux terminal expert. Provide ONLY the raw bash command for the request. No markdown, no explanations, no 'Here is your command'. Just the code.
 ```
 
 **How to use**:
@@ -882,7 +892,7 @@ docker ps -q | xargs -n 1 docker inspect --format '{{ .Name }} {{ .NetworkSettin
 
 | Tool | Purpose | Key Features |
 |------|---------|--------------|
-| **aichat** | Local LLM client | `q '<prompt>'` sends query. Alt+E transforms buffer content. Config: `.config/aichat/config.yaml` |
+| **aichat** | Local LLM client | `q '<prompt>'` sends query. Alt+E transforms buffer content. Config: `.config/aichat/config.yaml`, role: `.config/aichat/roles/cmd.md` |
 | **browser-use** | Browser automation | `browser-use <args>` runs headed browser automation with profile |
 | **with_firecrawl** | Firecrawl wrapper | `with_firecrawl <cmd>` runs command with Firecrawl API env loaded |
 
@@ -958,6 +968,7 @@ ll -s       # Show total size
 | atuin | `~/.config/atuin/config.toml` | Symlinked from repo |
 | glow | `~/.config/glow/glow.yml` | Symlinked from repo |
 | aichat | `~/.config/aichat/config.yaml` | Symlinked from repo |
+| aichat role | `~/.config/aichat/roles/cmd.md` | Symlinked from repo |
 | ghostty | `~/.config/ghostty/config` | Symlinked from repo |
 | git | `~/.gitconfig` | Symlinked from repo |
 | firecrawl | `~/.config/firecrawl.env` | Symlinked from repo (template: `firecrawl.env.example`) |

@@ -10,6 +10,8 @@ _onur_path_entries=(
   "$HOME/.local/bin"
   "$HOME/.atuin/bin"
   "$HOME/.cargo/bin"
+  "/opt/homebrew/bin"
+  "/opt/homebrew/sbin"
   "$HOME/.npm-global/bin"
   "$HOME/.opencode/bin"
   "$HOME/.lmstudio/bin"
@@ -73,4 +75,3 @@ if [[ -z "${EDITOR:-}" ]]; then
 fi
 
 export VISUAL="${VISUAL:-$EDITOR}"
-

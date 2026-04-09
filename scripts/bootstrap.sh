@@ -99,7 +99,6 @@ link_file() {
   fi
 }
 
-while IFS= read -r -d '' src; do
+while IFS= read -r src; do
   link_file "$src"
-done < <(find "$source_root" -type f -print0 | LC_ALL=C sort -z)
-
+done < <(find "$source_root" -type f | LC_ALL=C sort)

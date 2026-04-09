@@ -7,7 +7,7 @@ Shared shell dotfiles for desktop and `htpc`.
 - `home/` mirrors the files that will eventually live under `$HOME`
 - `scripts/bootstrap.sh` prepares symlinks from this repo into a target home
 - `scripts/check.sh` validates the repo in an isolated temp environment
-- `scripts/install.sh` provisions all tools on a fresh Fedora machine
+- `scripts/install.sh` provisions all tools on a fresh Fedora or macOS machine
 
 ## What is included
 
@@ -23,7 +23,7 @@ Shared shell dotfiles for desktop and `htpc`.
 
 ## Deploy from scratch
 
-On a fresh Fedora machine:
+On a fresh Fedora or macOS machine:
 
 ```bash
 git clone <repo> ~/Code/dot_files
@@ -31,7 +31,7 @@ cd ~/Code/dot_files
 ./scripts/install.sh
 ```
 
-`install.sh` installs all tools, creates symlinks, and updates the tldr cache. It is safe to re-run.
+`install.sh` installs all tools, creates symlinks, updates the tldr cache, and on macOS bootstraps Homebrew if needed. It is safe to re-run.
 
 After install, run `atuin login` to restore shell history sync.
 

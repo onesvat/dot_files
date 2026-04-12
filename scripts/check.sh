@@ -11,7 +11,8 @@ trap 'rm -rf "$tmp_dir"' EXIT
 zdotdir="$tmp_dir/zdotdir"
 xdg_config="$tmp_dir/.config"
 xdg_cache="$tmp_dir/.cache"
-mkdir -p "$zdotdir" "$xdg_config" "$xdg_cache" \
+test_bin="$tmp_dir/bin"
+mkdir -p "$zdotdir" "$xdg_config" "$xdg_cache" "$test_bin" \
   "$xdg_config/mise" "$xdg_config/ghostty" "$xdg_config/atuin" "$xdg_config/glow"
 
 ln -s "$source_root/.zshenv" "$zdotdir/.zshenv"
@@ -24,13 +25,24 @@ ln -s "$source_root/.config/atuin/config.toml" "$xdg_config/atuin/config.toml"
 ln -s "$source_root/.config/glow/glow.yml" "$xdg_config/glow/glow.yml"
 
 run_zsh() {
-  PATH="$base_path" \
+  PATH="$test_bin:$base_path" \
   HOME="$real_home" \
   ZDOTDIR="$zdotdir" \
   XDG_CONFIG_HOME="$xdg_config" \
   XDG_CACHE_HOME="$xdg_cache" \
   zsh "$@"
 }
+
+cat >"$test_bin/firecrawl" <<'EOF'
+#!/usr/bin/env bash
+printf '%s|%s\n' "${FIRECRAWL_API_URL:-}" "${FIRECRAWL_API_KEY:-}"
+EOF
+chmod +x "$test_bin/firecrawl"
+
+cat >"$xdg_config/firecrawl.env" <<'EOF'
+FIRECRAWL_API_URL=http://127.0.0.1:3002
+FIRECRAWL_API_KEY=change-me
+EOF
 
 printf 'syntax      '
 run_zsh -n "$source_root/.zshenv"
@@ -86,6 +98,15 @@ nonint_output="$(run_zsh -lc 'whence -w with_firecrawl')"
 if [[ "$nonint_output" != *"with_firecrawl: function"* ]]; then
   printf 'failed\n' >&2
   printf 'with_firecrawl is not available in non-interactive shells\n' >&2
+  exit 1
+fi
+printf 'ok\n'
+
+printf 'firecrawl   '
+firecrawl_output="$(run_zsh -lc 'firecrawl')"
+if [[ "$firecrawl_output" != "http://127.0.0.1:3002|change-me" ]]; then
+  printf 'failed\n' >&2
+  printf 'firecrawl wrapper did not load env: %s\n' "$firecrawl_output" >&2
   exit 1
 fi
 printf 'ok\n'

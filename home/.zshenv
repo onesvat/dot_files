@@ -26,16 +26,18 @@ done
 path=("${_onur_path_existing[@]}" "${path[@]}")
 unset _onur_path_dir _onur_path_entries _onur_path_existing
 
-with_firecrawl() {
-  local env_file="${XDG_CONFIG_HOME:-$HOME/.config}/firecrawl.env"
+_run_with_env_file() {
+  local label="$1"
+  local env_file="$2"
+  shift 2
 
   if [[ $# -eq 0 ]]; then
-    print -u2 "with_firecrawl: usage: with_firecrawl <command> [args...]"
+    print -u2 "$label: usage: $label <command> [args...]"
     return 2
   fi
 
   if [[ ! -r "$env_file" ]]; then
-    print -u2 "with_firecrawl: missing $env_file"
+    print -u2 "$label: missing $env_file"
     return 1
   fi
 
@@ -43,8 +45,25 @@ with_firecrawl() {
     set -a
     source "$env_file"
     set +a
-    exec "$@"
+    "$@"
   )
+}
+
+with_firecrawl() {
+  local env_file="${XDG_CONFIG_HOME:-$HOME/.config}/firecrawl.env"
+  _run_with_env_file "with_firecrawl" "$env_file" "$@"
+}
+
+firecrawl() {
+  local env_file="${XDG_CONFIG_HOME:-$HOME/.config}/firecrawl.env"
+  local firecrawl_bin="${commands[firecrawl]:-}"
+
+  if [[ -z "$firecrawl_bin" ]]; then
+    print -u2 "firecrawl: command not found"
+    return 127
+  fi
+
+  _run_with_env_file "firecrawl" "$env_file" "$firecrawl_bin" "$@"
 }
 
 if [[ -x "$HOME/.browser-use-env/bin/browser-use" ]]; then

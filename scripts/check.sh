@@ -40,7 +40,7 @@ EOF
 chmod +x "$test_bin/firecrawl"
 
 cat >"$xdg_config/firecrawl.env" <<'EOF'
-FIRECRAWL_API_URL=http://127.0.0.1:3002
+FIRECRAWL_API_URL=http://192.168.1.20:3002
 FIRECRAWL_API_KEY=change-me
 EOF
 
@@ -103,8 +103,8 @@ fi
 printf 'ok\n'
 
 printf 'firecrawl   '
-firecrawl_output="$(run_zsh -lc 'firecrawl')"
-if [[ "$firecrawl_output" != "http://127.0.0.1:3002|change-me" ]]; then
+firecrawl_output="$(run_zsh -lc 'path=("'"$test_bin"'" "${path[@]}"); rehash; firecrawl')"
+if [[ "$firecrawl_output" != "http://192.168.1.20:3002|change-me" ]]; then
   printf 'failed\n' >&2
   printf 'firecrawl wrapper did not load env: %s\n' "$firecrawl_output" >&2
   exit 1

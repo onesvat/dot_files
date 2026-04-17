@@ -1,6 +1,6 @@
 # see https://github.com/sigoden/aichat/blob/main/config.example.yaml
 
-model: htpc:gemma-4
+model: htpc:gemma-4-e4b-it
 #model: lms:zai-org/glm-4.7-flash
 clients:
 - type: openai-compatible

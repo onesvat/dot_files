@@ -102,3 +102,50 @@ link_file() {
 while IFS= read -r src; do
   link_file "$src"
 done < <(find "$source_root" -type f | LC_ALL=C sort)
+
+link_extra() {
+  local src="$1"
+  local dst="$target_home/$2"
+  local dst_dir
+  dst_dir="$(dirname "$dst")"
+
+  if (( dry_run )); then
+    printf '[dry-run] mkdir -p %s\n' "$dst_dir"
+  else
+    mkdir -p "$dst_dir"
+  fi
+
+  if [[ -L "$dst" ]]; then
+    if [[ "$(readlink "$dst")" == "$src" ]]; then
+      printf 'ok      %s\n' "$dst"
+      return 0
+    fi
+    if (( force )); then
+      (( dry_run )) && printf '[dry-run] rm %s\n' "$dst" || rm "$dst"
+    else
+      printf 'skip    %s (symlink exists)\n' "$dst"
+      return 0
+    fi
+  elif [[ -e "$dst" ]]; then
+    if (( force )); then
+      (( dry_run )) && printf '[dry-run] mv %s %s.bak\n' "$dst" "$dst" \
+        || mv "$dst" "$dst.bak.$(date +%Y%m%d%H%M%S)"
+    else
+      printf 'skip    %s (file exists)\n' "$dst"
+      return 0
+    fi
+  fi
+
+  if (( dry_run )); then
+    printf '[dry-run] ln -s %s %s\n' "$src" "$dst"
+  else
+    ln -s "$src" "$dst"
+    printf 'linked  %s\n' "$dst"
+  fi
+}
+
+agents_src="$source_root/AGENTS.md"
+link_extra "$agents_src" ".claude/CLAUDE.md"
+link_extra "$agents_src" ".codex/AGENTS.md"
+link_extra "$agents_src" ".gemini/GEMINI.md"
+link_extra "$agents_src" ".config/opencode/AGENTS.md"

@@ -13,3 +13,5 @@ if [[ -d "$HOME/Applications" ]]; then
   fi
 fi
 
+# Added by swiftly
+. "/home/onur/.local/share/swiftly/env.sh"

@@ -267,3 +267,34 @@ cat() {
     command cat "$@"
   fi
 }
+
+# Added by LM Studio CLI tool (lms)
+export PATH="$PATH:/home/onur/.lmstudio/bin"
+
+# OpenClaw Completion
+#source "/home/onur/.openclaw/completions/openclaw.zsh"
+
+# Rebase current branch onto upstream main and push to fork
+git-sync() {
+  local branch
+  branch=$(git branch --show-current) || return 1
+
+  # Ensure fork remote exists
+  if ! git remote get-url fork >/dev/null 2>&1; then
+    echo "error: 'fork' remote not found. Add it first:" >&2
+    echo "  git remote add fork git@github.com:<you>/<repo>.git" >&2
+    return 1
+  fi
+
+  echo "⟳ Fetching origin and fork..."
+  git fetch origin || return 1
+  git fetch fork || return 1
+
+  echo "⟳ Rebasing $branch onto origin/main..."
+  git rebase origin/main || return 1
+
+  echo "⟳ Pushing to fork/$branch..."
+  git push fork "$branch" --force-with-lease || return 1
+
+  echo "✓ $branch is up to date on fork"
+}

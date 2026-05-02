@@ -30,3 +30,7 @@
 [credential "https://gist.github.com"]
 	helper =
 	helper = !/usr/bin/gh auth git-credential
+[pull]
+	rebase = true
+[alias]
+	sync = !current_branch=$(git branch --show-current) && git fetch origin && git fetch fork && git rebase origin/main && git push fork \"$current_branch\" --force-with-lease

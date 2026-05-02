@@ -7,4 +7,7 @@ xh = "latest"
 bottom = "latest"
 dust = "latest"
 zellij = "latest"
+gh = "latest"
+go = "1.26.1"
+opencode = "latest"
 

@@ -15,7 +15,6 @@ _onur_path_entries=(
   "$HOME/.npm-global/bin"
   "$HOME/.opencode/bin"
   "$HOME/.lmstudio/bin"
-  "$HOME/.browser-use-env/bin"
 )
 
 _onur_path_existing=()

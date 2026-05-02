@@ -17,6 +17,7 @@ Shared shell dotfiles for desktop and `htpc`.
 - `ghostty/config` — terminal theme and cursor settings
 - `atuin/config.toml` — history search settings
 - `glow/glow.yml` — markdown viewer settings
+- `btop/btop.conf` — system monitor layout and visibility settings
 - `.gitconfig` — git identity, delta pager, merge settings
 - `aichat/config.yaml` — shared local LLM client config
 - `aichat/roles/cmd.md` — shell-command role used by `q`

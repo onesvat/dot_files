@@ -57,7 +57,7 @@ install_system_packages() {
     Linux)
       info "dnf packages"
       sudo dnf install -y \
-        fzf bat direnv glow tealdeer navi ghostty \
+        fzf bat direnv glow tealdeer navi ghostty btop \
         ripgrep fd-find jq yq \
         zsh git gh
       ;;
@@ -66,7 +66,7 @@ install_system_packages() {
 
       info "homebrew packages"
       brew install \
-        fzf bat direnv glow tealdeer navi \
+        fzf bat direnv glow tealdeer navi btop \
         ripgrep fd jq yq \
         zsh git gh
 

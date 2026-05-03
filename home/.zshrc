@@ -274,27 +274,60 @@ export PATH="$PATH:/home/onur/.lmstudio/bin"
 # OpenClaw Completion
 #source "/home/onur/.openclaw/completions/openclaw.zsh"
 
-# Rebase current branch onto upstream main and push to fork
+# Sync fork main with upstream main, then rebase the current branch on top.
 git-sync() {
+  local upstream="${GIT_SYNC_UPSTREAM:-origin}"
+  local fork="${GIT_SYNC_FORK:-fork}"
+  local main="${GIT_SYNC_MAIN:-main}"
   local branch
-  branch=$(git branch --show-current) || return 1
 
-  # Ensure fork remote exists
-  if ! git remote get-url fork >/dev/null 2>&1; then
-    echo "error: 'fork' remote not found. Add it first:" >&2
-    echo "  git remote add fork git@github.com:<you>/<repo>.git" >&2
+  branch=$(git branch --show-current) || return 1
+  if [[ -z "$branch" ]]; then
+    echo "error: not on a branch" >&2
     return 1
   fi
 
-  echo "⟳ Fetching origin and fork..."
-  git fetch origin || return 1
-  git fetch fork || return 1
+  if [[ -n "$(git status --porcelain)" ]]; then
+    echo "error: working tree is dirty; commit or stash first" >&2
+    git status --short
+    return 1
+  fi
 
-  echo "⟳ Rebasing $branch onto origin/main..."
-  git rebase origin/main || return 1
+  if ! git remote get-url "$upstream" >/dev/null 2>&1; then
+    echo "error: '$upstream' remote not found" >&2
+    return 1
+  fi
 
-  echo "⟳ Pushing to fork/$branch..."
-  git push fork "$branch" --force-with-lease || return 1
+  if ! git remote get-url "$fork" >/dev/null 2>&1; then
+    echo "error: '$fork' remote not found. Add it first:" >&2
+    echo "  git remote add $fork git@github.com:<you>/<repo>.git" >&2
+    return 1
+  fi
 
-  echo "✓ $branch is up to date on fork"
+  echo "Fetching $upstream and $fork..."
+  git fetch "$upstream" || return 1
+  git fetch "$fork" || return 1
+
+  echo "Syncing $main with $upstream/$main..."
+  git switch "$main" || return 1
+  git reset --hard "$upstream/$main" || return 1
+  git push "$fork" "$main:$main" || return 1
+
+  if [[ "$branch" == "$main" ]]; then
+    echo "$main is synced with $upstream/$main and $fork/$main"
+    return 0
+  fi
+
+  echo "Rebasing $branch onto $main..."
+  git switch "$branch" || return 1
+  git rebase "$main" || return 1
+
+  echo "Pushing $branch to $fork with --force-with-lease..."
+  git push "$fork" "$branch:$branch" --force-with-lease || return 1
+
+  echo "$branch is rebased on $main and pushed to $fork"
 }
+
+# pnpm (managed by corepack)
+export PNPM_HOME="$HOME/.local/share/pnpm"
+export PATH="$PNPM_HOME:$PATH"

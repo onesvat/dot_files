@@ -24,13 +24,13 @@
 	colorMoved = default
 
 [credential "https://github.com"]
-	helper =
-	helper = !/usr/bin/gh auth git-credential
+	helper = 
+	helper = !/home/onur/.local/bin/gh auth git-credential
 
 [credential "https://gist.github.com"]
-	helper =
-	helper = !/usr/bin/gh auth git-credential
+	helper = 
+	helper = !/home/onur/.local/bin/gh auth git-credential
 [pull]
 	rebase = true
 [alias]
-	sync = !current_branch=$(git branch --show-current) && git fetch origin && git fetch fork && git rebase origin/main && git push fork \"$current_branch\" --force-with-lease
+	sync = "!f() { upstream=\"${GIT_SYNC_UPSTREAM:-origin}\"; fork=\"${GIT_SYNC_FORK:-fork}\"; main=\"${GIT_SYNC_MAIN:-main}\"; branch=\"$(git branch --show-current)\" || exit 1; if [ -z \"$branch\" ]; then echo \"error: not on a branch\" >&2; exit 1; fi; if [ -n \"$(git status --porcelain)\" ]; then echo \"error: working tree is dirty; commit or stash first\" >&2; git status --short; exit 1; fi; git remote get-url \"$upstream\" >/dev/null 2>&1 || { echo \"error: $upstream remote not found\" >&2; exit 1; }; git remote get-url \"$fork\" >/dev/null 2>&1 || { echo \"error: $fork remote not found\" >&2; exit 1; }; echo \"Fetching $upstream and $fork...\"; git fetch \"$upstream\" || exit 1; git fetch \"$fork\" || exit 1; echo \"Syncing $main with $upstream/$main...\"; git switch \"$main\" || exit 1; git reset --hard \"$upstream/$main\" || exit 1; git push \"$fork\" \"$main:$main\" || exit 1; if [ \"$branch\" = \"$main\" ]; then echo \"$main is synced with $upstream/$main and $fork/$main\"; exit 0; fi; echo \"Rebasing $branch onto $main...\"; git switch \"$branch\" || exit 1; git rebase \"$main\" || exit 1; echo \"Pushing $branch to $fork with --force-with-lease...\"; git push \"$fork\" \"$branch:$branch\" --force-with-lease || exit 1; echo \"$branch is rebased on $main and pushed to $fork\"; }; f"

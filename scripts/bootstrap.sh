@@ -146,6 +146,8 @@ link_extra() {
 
 agents_src="$source_root/AGENTS.md"
 link_extra "$agents_src" ".claude/CLAUDE.md"
-link_extra "$agents_src" ".codex/AGENTS.md"
 link_extra "$agents_src" ".gemini/GEMINI.md"
 link_extra "$agents_src" ".config/opencode/AGENTS.md"
+
+codex_src="$source_root/CODEX.md"
+link_extra "$codex_src" ".codex/AGENTS.md"
